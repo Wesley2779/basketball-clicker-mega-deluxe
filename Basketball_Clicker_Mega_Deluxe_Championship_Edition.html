@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Basketball Clicker Mega Deluxe Championship Edition</title>
+<style>
+body{font-family:Arial;background:#0a0f1f;color:white;margin:0}
+header{text-align:center;background:#111a33;padding:15px}
+nav{text-align:center;padding:10px;background:#18284a}
+button{padding:8px 12px;margin:4px}
+.page{display:none;padding:12px}
+.active{display:block}
+.card{background:#18284a;border-radius:12px;padding:12px;margin:8px}
+#ball{font-size:150px;cursor:pointer;text-align:center}
+</style>
+</head>
+<body>
+<header><h1>🏀 Mega Deluxe Championship Edition 🏆</h1><h3>Player: Wesley2779</h3></header>
+
+<nav>
+<button onclick="showPage('home')">Home</button>
+<button onclick="showPage('shop')">Shop</button>
+<button onclick="showPage('cards')">Cards</button>
+<button onclick="showPage('pets')">Pets</button>
+<button onclick="showPage('quests')">Quests</button>
+<button onclick="showPage('arena')">Arena</button>
+<button onclick="showPage('inventory')">Inventory</button>
+</nav>
+
+<div id="home" class="page active">
+<div class="card">
+<h2>🏀 Basketballs: <span id="money">0</span></h2>
+<h3>⭐ Level: <span id="level">1</span></h3>
+<h3>💥 Power: <span id="power">1</span></h3>
+<h3>🤖 Auto: <span id="auto">0</span>/sec</h3>
+<div id="ball">🏀</div>
+</div></div>
+
+<div id="shop" class="page"><div class="card">
+<button onclick="buy(100,1)">👟 Shoes</button>
+<button onclick="buy(1000,10)">🏀 Trainer</button>
+<button onclick="buy(10000,100)">🏟 Arena</button>
+<button onclick="autoBuy()">🤖 Auto Clicker</button>
+</div></div>
+
+<div id="cards" class="page"><div class="card">
+<button onclick="pack()">🎁 Open Pack (5000)</button>
+<div id="cardsOut"></div>
+</div></div>
+
+<div id="pets" class="page"><div class="card">
+<button onclick="pet()">🐾 Adopt Pet (25000)</button>
+<div id="petsOut"></div>
+</div></div>
+
+<div id="quests" class="page"><div class="card"><div id="questsOut"></div></div></div>
+
+<div id="arena" class="page"><div class="card">
+<button onclick="boss()">⚔️ Boss Battle</button>
+<div id="arenaOut"></div>
+</div></div>
+
+<div id="inventory" class="page"><div class="card"><div id="invOut"></div></div></div>
+
+<script>
+let money=0,power=1,auto=0,level=1,xp=0;
+let cards=[],pets=[];
+const stars=["Victor Wembanyama","Donovan Mitchell","Stephen Curry","LeBron James"];
+
+function showPage(id){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+}
+
+ball.onclick=()=>{
+money+=power; xp++;
+if(xp>=level*100){xp=0;level++;power+=5;}
+update();
+};
+
+function buy(c,p){if(money>=c){money-=c;power+=p;update();}}
+function autoBuy(){if(money>=5000){money-=5000;auto+=25;update();}}
+
+function pack(){
+if(money>=5000){
+money-=5000;
+cards.push("🃏 "+stars[Math.floor(Math.random()*stars.length)]);
+update();
+}}
+
+function pet(){
+if(money>=25000){
+money-=25000;
+pets.push("🐾 Pet "+(pets.length+1));
+power+=25;
+update();
+}}
+
+function boss(){
+let reward=Math.floor(Math.random()*100000)+25000;
+money+=reward;
+arenaOut.innerHTML="🏆 Victory! Won "+reward+" basketballs.";
+update();
+}
+
+function update(){
+moneyEl=document.getElementById('money');
+moneyEl.textContent=Math.floor(money);
+level.textContent=window.level;
+power.textContent=window.power;
+auto.textContent=window.auto;
+cardsOut.innerHTML=cards.join("<br>");
+petsOut.innerHTML=pets.join("<br>");
+questsOut.innerHTML=(money>=1000?"✅":"⬜")+" Reach 1,000<br>"+
+(cards.length>=3?"✅":"⬜")+" Collect 3 cards<br>"+
+(pets.length>=2?"✅":"⬜")+" Own 2 pets";
+invOut.innerHTML="Cards: "+cards.length+"<br>Pets: "+pets.length;
+localStorage.setItem("megaDeluxeSave",JSON.stringify({money,power:auto?window.power:window.power,auto,level:window.level,xp,cards,pets}));
+}
+
+setInterval(()=>{money+=auto;update();},1000);
+update();
+</script>
+</body>
+</html>
